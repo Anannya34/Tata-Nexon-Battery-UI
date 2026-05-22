@@ -329,7 +329,7 @@ class EnsembleModel:
         )
         
         # Train each model
-        for model_name, model in self.models.items():
+        for model_name, model in list(self.models.items()):
             logger.info(f"Training {model_name} model...")
             
             # Scale features

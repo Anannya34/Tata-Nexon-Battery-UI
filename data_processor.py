@@ -191,8 +191,8 @@ class FeatureEngineer:
             df_features['cycle_sin'] = np.sin(2 * np.pi * sequence_pos / len(df_features))
             df_features['cycle_cos'] = np.cos(2 * np.pi * sequence_pos / len(df_features))
         
-        # Store feature names for later use
-        self.feature_names = [col for col in df_features.columns if col not in ['battery_id', 'test_id']]
+        # Store feature names for later use (handled in process_data instead)
+        # self.feature_names = [col for col in df_features.columns if col not in ['battery_id', 'test_id']]
         
         logger.info(f"Created {len(df_features.columns) - len(df.columns)} new features")
         logger.info(f"Total features: {len(df_features.columns)}")
@@ -330,9 +330,16 @@ class DataProcessor:
         df_features = self.feature_engineer.create_advanced_features(df_clean)
         
         # 4. Prepare features for ML models
-        feature_columns = [col for col in df_features.columns 
-                          if col not in ['battery_id', 'test_id'] and 
-                          df_features[col].dtype in ['int8', 'int16', 'int32', 'int64', 'float16', 'float32', 'float64']]
+        if is_training:
+            feature_columns = [col for col in df_features.columns 
+                              if col not in ['battery_id', 'test_id'] and 
+                              df_features[col].dtype in ['int8', 'int16', 'int32', 'int64', 'float16', 'float32', 'float64']]
+            self.feature_engineer.feature_names = feature_columns
+        else:
+            feature_columns = self.feature_engineer.feature_names
+            for col in feature_columns:
+                if col not in df_features.columns:
+                    df_features[col] = 0.0
         
         X = df_features[feature_columns].values
         

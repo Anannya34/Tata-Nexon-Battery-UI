@@ -27,7 +27,9 @@ class Settings(BaseSettings):
     # API Settings
     api_host: str = "0.0.0.0"
     api_port: int = 8000
+    api_workers: int = 1
     dashboard_port: int = 8501
+    allow_origins: List[str] = ["http://localhost:3000", "http://localhost:8501"]
     
     # Data Paths
     data_dir: Path = Path("data")
@@ -50,6 +52,7 @@ class Settings(BaseSettings):
     transformer_d_model: int = 256
     transformer_nhead: int = 8
     transformer_num_layers: int = 6
+    transformer_dropout: float = 0.1
     sequence_length: int = 50
     
     # Health Thresholds
@@ -77,6 +80,7 @@ class Settings(BaseSettings):
     class Config:
         env_file = ".env"
         env_file_encoding = "utf-8"
+        extra = "ignore"
     
     def create_directories(self) -> None:
         """Create necessary directories."""

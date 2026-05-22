@@ -190,7 +190,7 @@ class HealthAnalyzer:
             'current_battery_total_cost': total_degradation_cost,
             'replacement_cost': replacement_cost,
             'new_battery_cost_over_period': new_battery_cost_over_rul_period,
-            'total_replacement_cost': replacement_cost + new_battery_cost_over_period,
+            'total_replacement_cost': replacement_cost + new_battery_cost_over_rul_period,
             'net_savings': net_savings,
             'roi_percentage': roi_percentage,
             'years_remaining': years_remaining,
@@ -212,6 +212,9 @@ class PredictionEngine:
         """Load all available models."""
         try:
             model_manager.load_models()
+            processor_path = settings.models_dir / "data_processor.pkl"
+            if processor_path.exists():
+                data_processor.load_processor(str(processor_path))
             self.model_loaded = True
             logger.info("Models loaded successfully")
         except Exception as e:
@@ -230,15 +233,15 @@ class PredictionEngine:
         # Convert to DataFrame
         df = pd.DataFrame([input_data])
         
-        # Process data
-        X_processed, _, _ = data_processor.process_data(df, is_training=False)
-        
         # Make prediction
         if not self.model_loaded:
             self.load_models()
         
         if not self.model_loaded:
             raise ValueError("No models available for prediction")
+            
+        # Process data
+        X_processed, _, _ = data_processor.process_data(df, is_training=False)
         
         # Get predictions from model
         rul_pred, sop_pred = model_manager.predict(X_processed, model_name)
