@@ -109,6 +109,10 @@ class DashboardManager:
         """Check if models are loaded and available."""
         try:
             model_info = get_model_info()
+            if len(model_info.get('available_models', [])) == 0:
+                # Attempt to load models from disk if not loaded yet
+                prediction_engine.load_models()
+                model_info = get_model_info()
             return len(model_info.get('available_models', [])) > 0, model_info
         except Exception as e:
             logger.error(f"Failed to check model status: {str(e)}")
