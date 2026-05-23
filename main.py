@@ -42,36 +42,41 @@ class ApplicationRunner:
         )
     
     def run_dashboard(self, port: int = None):
-        """Run the Streamlit dashboard."""
-        port = port or settings.dashboard_port
+        """Run the React Vite dashboard."""
+        port = port or 3000
+        logger.info(f"Starting React Vite dashboard on port {port}...")
         
-        logger.info(f"Starting Streamlit dashboard on port {port}")
+        frontend_dir = self.base_dir / "frontend"
+        node_modules = frontend_dir / "node_modules"
         
-        # Run streamlit
-        cmd = [
-            sys.executable, "-m", "streamlit", "run",
-            str(self.base_dir / "dashboard.py"),
-            "--server.port", str(port),
-            "--server.address", "0.0.0.0",
-            "--theme.base", "light",
-            "--theme.primaryColor", "#1f77b4"
-        ]
-        
-        subprocess.run(cmd)
+        # Run npm install if node_modules is missing
+        if not node_modules.exists():
+            logger.info("node_modules not found. Running npm install...")
+            subprocess.run("npm install", shell=True, cwd=str(frontend_dir))
+            
+        # Start Vite dev server
+        subprocess.run("npm run dev", shell=True, cwd=str(frontend_dir))
+
     
     def run_both_services(self, api_port: int = None, dashboard_port: int = None):
         """Run both API and dashboard simultaneously."""
+        import sys
+        import subprocess
+        
         api_port = api_port or settings.api_port
         dashboard_port = dashboard_port or settings.dashboard_port
         
         logger.info("Starting both API server and dashboard...")
         
-        # Start API server in a separate process
-        api_process = multiprocessing.Process(
-            target=self.run_api_server,
-            args=(settings.api_host, api_port, 1)
-        )
-        api_process.start()
+        # Start API server as a subprocess using the current python virtualenv interpreter
+        python_exe = sys.executable
+        logger.info(f"Starting API server via subprocess: {python_exe} -m uvicorn api:app --host {settings.api_host} --port {api_port}")
+        
+        api_process = subprocess.Popen([
+            python_exe, "-m", "uvicorn", "api:app",
+            "--host", settings.api_host,
+            "--port", str(api_port)
+        ])
         
         # Wait a moment for API to start
         time.sleep(2)
@@ -82,8 +87,10 @@ class ApplicationRunner:
         except KeyboardInterrupt:
             logger.info("Shutting down services...")
         finally:
+            logger.info("Terminating API process...")
             api_process.terminate()
-            api_process.join()
+            api_process.wait()
+
     
     def train_models(self, force_retrain: bool = False):
         """Train or retrain all models."""
