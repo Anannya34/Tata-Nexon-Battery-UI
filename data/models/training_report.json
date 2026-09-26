@@ -1,8 +1,8 @@
 {
-  "training_timestamp": "2026-05-22 23:46:54",
+  "training_timestamp": "2026-09-26 11:03:42",
   "system_info": {
     "version": "2.0.0",
-    "environment": "development",
+    "environment": "production",
     "random_seed": 42
   },
   "data_info": {
@@ -19,13 +19,13 @@
   },
   "model_metrics": {
     "ensemble": {
-      "rf_rul_mae": 0.22557454587075404,
-      "rf_sop_mae": 0.0015472074435885527,
+      "rf_rul_mae": 0.22557454587074932,
+      "rf_sop_mae": 0.0015472074435885577,
       "gbm_rul_mae": 0.2787207473236682,
       "gbm_sop_mae": 0.0017366242435506484,
-      "xgb_rul_mae": 0.8995267748832703,
-      "xgb_sop_mae": 0.0014701931504532695,
-      "training_time_seconds": 18.50521183013916
+      "xgb_rul_mae": "1.058093",
+      "xgb_sop_mae": "0.0014366412",
+      "training_time_seconds": 24.60245943069458
     },
     "lstm": {
       "error": "too many values to unpack (expected 3)"
