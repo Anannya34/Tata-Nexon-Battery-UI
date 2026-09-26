@@ -1,5 +1,5 @@
-# Battery RUL Prediction System - Production Dockerfile
-FROM python:3.11-slim
+# Tata Nexon EV Battery UI & RUL Prediction System - Render Production Dockerfile
+FROM python:3.10-slim
 
 WORKDIR /app
 
@@ -8,25 +8,22 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy dependency file first for better layer caching
+# Copy dependency specifications first for caching
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy application code
+# Copy full application source
 COPY . .
 
-# Create necessary directories
+# Ensure data and models directories exist
 RUN mkdir -p data/models data/exports logs
 
-# Train models during build
+# Pre-train ensemble ML models during Docker build
 RUN python train_models.py
 
-# Expose API and dashboard ports
-EXPOSE 8000 8501
+# Expose default port
+ENV PORT=8000
+EXPOSE 8000
 
-# Health check
-HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
-    CMD python -c "import requests; requests.get('http://localhost:8000/health')" || exit 1
-
-# Start both services
-CMD ["python", "main.py", "run"]
+# Start FastAPI application using dynamic Render PORT variable
+CMD ["sh", "-c", "uvicorn api:app --host 0.0.0.0 --port ${PORT:-8000}"]
