@@ -1,5 +1,7 @@
+import { useState } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import Sidebar from './components/Sidebar';
+import SplashScreen from './components/SplashScreen';
 import DashboardPage from './pages/DashboardPage';
 import PredictionPage from './pages/PredictionPage';
 import AnalyticsPage from './pages/AnalyticsPage';
@@ -9,6 +11,12 @@ import SettingsPage from './pages/SettingsPage';
 import TwinPage from './pages/TwinPage';
 
 export default function App() {
+  const [showSplash, setShowSplash] = useState(true);
+
+  if (showSplash) {
+    return <SplashScreen onEnter={() => setShowSplash(false)} />;
+  }
+
   return (
     <div className="app-layout">
       {/* Dynamic Cybernetic particle backdrop layer */}

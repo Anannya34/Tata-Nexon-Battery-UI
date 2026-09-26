@@ -6,14 +6,14 @@ import {
 } from 'lucide-react';
 
 const NAV_ITEMS = [
-  { label: 'CORE SYSTEM', items: [
-    { to: '/',           icon: LayoutDashboard, text: 'Dashboard' },
-    { to: '/analytics',  icon: Activity,        text: 'Health Analytics' },
-    { to: '/predict',    icon: Cpu,             text: 'Single Prediction' },
+  { label: 'TATA NEXON CORE', items: [
+    { to: '/',           icon: LayoutDashboard, text: 'Dashboard Overview' },
+    { to: '/twin',       icon: Compass,         text: '8-Module Pack Twin' },
+    { to: '/analytics',  icon: Activity,        text: 'Nexon Telemetry' },
+    { to: '/predict',    icon: Cpu,             text: 'Nexon ML Prediction' },
     { to: '/batch',      icon: Layers,          text: 'Batch Diagnostics' },
   ]},
   { label: 'BATTERY INTELLIGENCE', items: [
-    { to: '/twin',       icon: Compass,         text: 'Digital Twin View' },
     { to: '/risk',       icon: ShieldAlert,     text: 'Risk Intelligence' },
     { to: '/settings',   icon: Settings,        text: 'Settings Control' },
   ]},
@@ -54,12 +54,12 @@ export default function Sidebar() {
       <aside className={`sidebar ${mobileOpen ? 'open' : ''}`}>
         {/* Brand Header */}
         <div className="sidebar-brand">
-          <div className="sidebar-brand-icon">
-            <Zap size={18} />
+          <div className="sidebar-brand-icon" style={{ background: 'linear-gradient(135deg, #0077FF 0%, #00F2FE 100%)' }}>
+            <Zap size={18} color="#070709" />
           </div>
           <div>
-            <div className="sidebar-brand-text">AURA-BATTERY</div>
-            <div className="sidebar-brand-version">v3.0.0 · DIGITAL TWIN</div>
+            <div className="sidebar-brand-text" style={{ color: '#00F2FE', fontWeight: 800 }}>TATA NEXON EV</div>
+            <div className="sidebar-brand-version">ZIPTRON 30.2 kWh PACK</div>
           </div>
         </div>
 
@@ -90,8 +90,8 @@ export default function Sidebar() {
         <div className="sidebar-footer" style={{ borderTop: '1px solid var(--border-subtle)', paddingTop: '12px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '4px' }}>
             <div className="pulse-dot pulse-dot--healthy" />
-            <span style={{ fontSize: '0.7rem', color: 'var(--text-secondary)', fontFamily: 'var(--font-mono)' }}>
-              TWIN OPERATIONAL
+            <span style={{ fontSize: '0.7rem', color: '#00E676', fontFamily: 'var(--font-mono)', fontWeight: 700 }}>
+              TATA ZIPTRON SYNCED
             </span>
           </div>
         </div>
